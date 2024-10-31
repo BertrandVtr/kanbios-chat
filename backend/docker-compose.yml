@@ -1,0 +1,15 @@
+services:
+    postgres:
+        image: postgres:13
+        container_name: postgres_db
+        environment:
+            POSTGRES_USER: ${POSTGRES_USER}
+            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+            POSTGRES_DB: ${POSTGRES_DB}
+        ports:
+            - '${POSTGRES_PORT:-5432}:5432'        # Expose le port PostgreSQL pour l'accès local
+        volumes:
+            - postgres_data:/var/lib/postgresql/data  # Persistance des données PostgreSQL
+
+volumes:
+    postgres_data:
