@@ -3,6 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { FindOneOptions, Repository } from 'typeorm';
 import { User } from './user.entity';
 import { UserCreateDto } from './dto/user-create.dto';
+import { PaginatedResult } from '../utils/interfaces/paginated-result.interface';
+import { UserUpdateDto } from './dto/user-update.dto';
 
 @Injectable()
 export class UserService {
@@ -28,22 +30,37 @@ export class UserService {
     return await this.userRepository.find();
   }
 
-  public async create(userCreateDto: UserCreateDto): Promise<User> {
-    const user = new User();
-    user.firstName = userCreateDto.firstName;
-    user.lastName = userCreateDto.lastName;
-    user.email = userCreateDto.email;
-    user.password = userCreateDto.password;
+  public async findAllWithPagination(
+    page: number = 1,
+    limit: number = 50,
+  ): Promise<PaginatedResult<User>> {
+    const offset = (page - 1) * limit;
 
-    return await this.userRepository.save(user);
-  }
-
-  public async getUserPassword(userId: number): Promise<string | null> {
-    const user = await this.userRepository.findOne({
-      where: { id: userId },
-      select: ['password'],
+    const [data, total] = await this.userRepository.findAndCount({
+      take: limit,
+      skip: offset,
+      order: { createdAt: 'asc' },
     });
 
-    return user?.password;
+    return {
+      data,
+      total,
+      currentPage: page,
+      lastPage: Math.ceil(total / limit),
+      limit,
+    };
+  }
+
+  public async create(userCreateDto: UserCreateDto): Promise<User> {
+    return await this.userRepository.save(new User(userCreateDto));
+  }
+
+  public async update(id: number, userUpdateDto: UserUpdateDto): Promise<User> {
+    await this.userRepository.save({ ...userUpdateDto, id });
+    return await this.userRepository.findOneBy({ id });
+  }
+
+  public async delete(id: number): Promise<void> {
+    await this.userRepository.delete(id);
   }
 }

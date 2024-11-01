@@ -25,10 +25,7 @@ export class AuthService {
     user: User,
     plainPassword: string,
   ): Promise<boolean> {
-    return await bcrypt.compare(
-      plainPassword,
-      await this.userService.getUserPassword(user.id),
-    );
+    return await bcrypt.compare(plainPassword, user.password);
   }
 
   public generateJWT(user: User): string {
