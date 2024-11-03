@@ -2,7 +2,7 @@ import { Middleware } from '@reduxjs/toolkit';
 import { setToken } from './authSlice';
 import apiClient from '../api/apiClient.ts';
 
-const tokenMiddleware: Middleware = store => next => action => {
+const jwtTokenMiddleware: Middleware = store => next => action => {
   const result = next(action);
 
   if (setToken.match(action)) {
@@ -16,4 +16,4 @@ const tokenMiddleware: Middleware = store => next => action => {
   return result;
 };
 
-export default tokenMiddleware;
+export default jwtTokenMiddleware;

@@ -1,7 +1,7 @@
-import Navbar from './Navbar';
+import Navbar from '../components/navbar/Navbar.tsx';
 import { Outlet } from 'react-router';
 
-function Layout() {
+function PageLayout() {
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
@@ -17,4 +17,4 @@ function Layout() {
   );
 }
 
-export default Layout;
+export default PageLayout;
