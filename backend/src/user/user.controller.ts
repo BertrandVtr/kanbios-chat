@@ -20,6 +20,8 @@ import { UserCreateDto } from './dto/user-create.dto';
 import { GetEntityPipe } from './pipes/get-entity.pipe';
 import { User } from './user.entity';
 import { UserUpdateDto } from './dto/user-update.dto';
+import { AuthUser } from '../auth/auth-user.decorator';
+import { Not } from 'typeorm';
 
 @UseGuards(AuthGuard)
 @Controller('users')
@@ -31,8 +33,11 @@ export class UserController {
   public async getAll(
     @Query('page', new ParseIntPipe({ optional: true })) page: number = 1,
     @Query('limit', new ParseIntPipe({ optional: true })) limit: number = 50,
+    @AuthUser() authUser: User,
   ) {
-    return await this.userService.findAllWithPagination(page, limit);
+    return await this.userService.findAllWithPagination(page, limit, {
+      id: Not(authUser.id),
+    });
   }
 
   @Post('/')

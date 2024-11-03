@@ -1,7 +1,9 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { User } from '../types/User.ts';
-import { login as loginApi } from '../api/AuthApi.ts';
+import { login as loginApi, signIn as singInApi } from '../api/AuthApi.ts';
 import { jwtDecode, JwtPayload } from 'jwt-decode';
+import { LogInFormData } from '../types/LogInFormData.ts';
+import { SingInFormData } from '../types/SingInFormData.ts';
 
 interface AuthState {
   user: User | null;
@@ -55,15 +57,14 @@ export const decodeAndStoreToken = createAsyncThunk<void, DecodeAndStoreActionPa
     const decoded = jwtDecode<User & JwtPayload>(token);
     const now = Math.floor(Date.now() / 1000);
 
-    console.log('bon bon bon', decoded.exp, now);
     if (decoded.exp && now > decoded.exp) {
       localStorage.removeItem('JwtToken');
       dispatch(clearAuth());
       return;
     }
 
-    const { firstName, lastName, email } = decoded;
-    const user = { firstName, lastName, email };
+    const { firstName, lastName, email, id } = decoded;
+    const user: User = { firstName, lastName, email, id };
 
     dispatch(setToken(token));
     dispatch(setAuthUser(user));
@@ -76,12 +77,24 @@ export const decodeAndStoreToken = createAsyncThunk<void, DecodeAndStoreActionPa
   },
 );
 
-interface LoginActionPayload {
-  formData: {
-    email: string;
-    password: string;
-  };
+interface SignInActionPayload {
+  formData: SingInFormData;
+  onSuccess?: () => void;
+}
 
+export const signIn = createAsyncThunk<void, SignInActionPayload>(
+  'auth/signIn',
+  async ({ onSuccess, formData }, { dispatch }) => {
+    const token = await singInApi(formData);
+
+    if (token) {
+      dispatch(decodeAndStoreToken({ token, onSuccess }));
+    }
+  },
+);
+
+interface LoginActionPayload {
+  formData: LogInFormData;
   onSuccess?: () => void;
 }
 

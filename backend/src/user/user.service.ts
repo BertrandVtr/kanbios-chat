@@ -5,6 +5,7 @@ import { User } from './user.entity';
 import { UserCreateDto } from './dto/user-create.dto';
 import { PaginatedResult } from '../utils/interfaces/paginated-result.interface';
 import { UserUpdateDto } from './dto/user-update.dto';
+import { FindOptionsWhere } from 'typeorm/find-options/FindOptionsWhere';
 
 @Injectable()
 export class UserService {
@@ -33,6 +34,7 @@ export class UserService {
   public async findAllWithPagination(
     page: number = 1,
     limit: number = 50,
+    where?: FindOptionsWhere<User>,
   ): Promise<PaginatedResult<User>> {
     const offset = (page - 1) * limit;
 
@@ -40,6 +42,7 @@ export class UserService {
       take: limit,
       skip: offset,
       order: { createdAt: 'asc' },
+      where,
     });
 
     return {
