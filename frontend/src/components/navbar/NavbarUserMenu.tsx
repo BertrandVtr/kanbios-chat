@@ -1,6 +1,6 @@
 import { MouseEvent, useMemo, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store/hooks.ts';
-import { logout as logoutAction, selectAuthUser } from '../../store/authSlice.ts';
+import { logout as logoutAction, selectAuthUser } from '../../store/auth/authSlice.ts';
 import { User } from '../../types/User.ts';
 
 export const NavbarUserMenu = () => {
@@ -28,7 +28,7 @@ export const NavbarUserMenu = () => {
       >
         <span className="mr-2">{fullName}</span>
         <img
-          src="https://via.placeholder.com/50"
+          src="https://via.placeholder.com/30"
           alt="Avatar"
           className="w-8 h-8 rounded-full"
         />

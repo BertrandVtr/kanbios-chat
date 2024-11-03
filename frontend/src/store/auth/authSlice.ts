@@ -1,9 +1,9 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { User } from '../types/User.ts';
-import { login as loginApi, signIn as singInApi } from '../api/AuthApi.ts';
+import { User } from '../../types/User.ts';
+import { login as loginApi, signIn as singInApi } from '../../api/AuthApi.ts';
 import { jwtDecode, JwtPayload } from 'jwt-decode';
-import { LogInFormData } from '../types/LogInFormData.ts';
-import { SingInFormData } from '../types/SingInFormData.ts';
+import { LogInFormData } from '../../types/LogInFormData.ts';
+import { SingInFormData } from '../../types/SingInFormData.ts';
 
 interface AuthState {
   user: User | null;

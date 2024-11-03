@@ -1,5 +1,5 @@
 import { useAppSelector } from '../../store/hooks.ts';
-import { selectIsAuthenticated } from '../../store/authSlice.ts';
+import { selectIsAuthenticated } from '../../store/auth/authSlice.ts';
 import { NavbarUserMenu } from './NavbarUserMenu.tsx';
 
 function Navbar() {

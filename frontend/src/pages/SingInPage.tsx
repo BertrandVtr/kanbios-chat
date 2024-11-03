@@ -1,6 +1,8 @@
 import { FormInput } from '../components/forms/FormInput.tsx';
-import { ChangeEvent, useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { ChangeEvent, FormEvent, useState } from 'react';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { useAppDispatch } from '../store/hooks.ts';
+import { signIn } from '../store/auth/authSlice.ts';
 
 interface SingInFormData {
   firstName: string,
@@ -11,6 +13,9 @@ interface SingInFormData {
 }
 
 export const SingInPage = () => {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState<SingInFormData>({
     firstName: '',
     lastName: '',
@@ -26,11 +31,17 @@ export const SingInPage = () => {
     setFormData((prevState) => ({ ...prevState, [name]: value }));
   }
 
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    dispatch(signIn({ formData, onSuccess: () => navigate('/') }));
+  }
+
   return (
     <>
       <div className="max-w-md mx-auto mt-10 bg-white p-8 border border-gray-200 rounded-lg shadow-md">
         <h2 className="text-2xl font-bold text-center mb-6">Inscription</h2>
-        <form>
+        <form onSubmit={handleSubmit}>
           <div className="space-y-4">
             <div className="flex gap-4">
               <FormInput

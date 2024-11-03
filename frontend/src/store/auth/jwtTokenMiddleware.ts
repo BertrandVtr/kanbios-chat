@@ -1,6 +1,6 @@
 import { Middleware } from '@reduxjs/toolkit';
-import { setToken } from './authSlice';
-import apiClient from '../api/apiClient.ts';
+import { setToken } from './authSlice.ts';
+import apiClient from '../../api/apiClient.ts';
 
 const jwtTokenMiddleware: Middleware = store => next => action => {
   const result = next(action);

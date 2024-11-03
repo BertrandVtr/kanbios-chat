@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
-import authSlice from './authSlice.ts';
-import jwtTokenMiddleware from './jwtTokenMiddleware.ts';
+import authSlice from './auth/authSlice.ts';
+import jwtTokenMiddleware from './auth/jwtTokenMiddleware.ts';
 
 const reducer = { auth: authSlice };
 
