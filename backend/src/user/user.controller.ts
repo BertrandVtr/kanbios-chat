@@ -22,10 +22,12 @@ import { User } from './user.entity';
 import { UserUpdateDto } from './dto/user-update.dto';
 import { AuthUser } from '../auth/auth-user.decorator';
 import { Not } from 'typeorm';
+import { ContextAwareInterceptor } from '../utils/context-aware.interceptor';
 
 @UseGuards(AuthGuard)
 @Controller('users')
 @UseInterceptors(ClassSerializerInterceptor)
+@UseInterceptors(ContextAwareInterceptor)
 export class UserController {
   constructor(readonly userService: UserService) {}
 

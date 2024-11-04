@@ -22,9 +22,9 @@ export class UserService {
 
   public async findOneByEmail(
     email: string,
-    options: FindOneOptions<User> = {},
+    where: FindOptionsWhere<User> = {},
   ): Promise<User | null> {
-    return await this.userRepository.findOne({ where: { email }, ...options });
+    return await this.userRepository.findOne({ where: { email, ...where } });
   }
 
   public async findAll(): Promise<User[]> {

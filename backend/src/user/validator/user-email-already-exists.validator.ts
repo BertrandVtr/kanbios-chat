@@ -6,6 +6,8 @@ import {
 } from 'class-validator';
 import { Injectable } from '@nestjs/common';
 import { UserService } from '../user.service';
+import { ContextAwareValidationArguments } from '../../utils/context-aware-validation-arguments.interface';
+import { Not } from 'typeorm';
 
 @ValidatorConstraint({ async: true })
 @Injectable()
@@ -14,8 +16,16 @@ export class UserEmailAlreadyExistsValidator
 {
   constructor(readonly userService: UserService) {}
 
-  async validate(value: string): Promise<boolean> {
-    const user = await this.userService.findOneByEmail(value);
+  async validate(
+    value: string,
+    args: ContextAwareValidationArguments,
+  ): Promise<boolean> {
+    const userId = args.object.context.params.id;
+
+    const user = await this.userService.findOneByEmail(value, {
+      id: userId ? Not(+userId) : undefined,
+    });
+
     return !user;
   }
 
