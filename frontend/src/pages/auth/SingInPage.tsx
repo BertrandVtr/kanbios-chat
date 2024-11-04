@@ -1,8 +1,8 @@
-import { FormInput } from '../components/forms/FormInput.tsx';
+import { FormInput } from '../../components/forms/FormInput.tsx';
 import { ChangeEvent, FormEvent, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { useAppDispatch } from '../store/hooks.ts';
-import { signIn } from '../store/auth/authSlice.ts';
+import { useAppDispatch } from '../../store/hooks.ts';
+import { signIn } from '../../store/auth/authSlice.ts';
 
 interface SingInFormData {
   firstName: string,

@@ -1,24 +1,12 @@
-import { BackButton } from '../components/utils/BackButton.tsx';
-import React, { useEffect, useMemo, useState } from 'react';
-import { User } from '../types/User.ts';
-import { getUser } from '../api/UsersApi.ts';
-import { useParams } from 'react-router';
-import { useAppSelector } from '../store/hooks.ts';
-import { selectAuthUser } from '../store/auth/authSlice.ts';
+import { BackButton } from '../../components/utils/BackButton.tsx';
+import React, { useEffect, useMemo } from 'react';
+import { useAppSelector } from '../../store/hooks.ts';
+import { selectAuthUser } from '../../store/auth/authSlice.ts';
+import { useRouteUser } from '../../hooks/useRouteUser.ts';
 
 export const ChatPage: React.FC = () => {
   const authUser = useAppSelector(selectAuthUser);
-  const { userId } = useParams() as { userId: string };
-
-  const [user, setUser] = useState<User | null>(null);
-
-  useEffect(() => {
-    async function fetchUser() {
-      setUser(await getUser(+userId));
-    }
-
-    fetchUser();
-  }, [userId]);
+  const [user] = useRouteUser();
 
   useEffect(() => {
     if (user?.id === authUser?.id) {

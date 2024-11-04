@@ -6,7 +6,7 @@ import { selectAuthUser } from '../../store/auth/authSlice.ts';
 
 export const UserList = ({ users }: { users: User[] }) => {
   return (
-    <div className="max-w-7xl mx-auto">
+    <div>
       {users.map((user) => (<UserListItem user={user} key={user.id} />))}
     </div>
   );
@@ -26,14 +26,20 @@ const UserListItem = ({ user }: { user: User }) => {
           <p className="text-lg font-medium">{fullName}</p>
         </div>
       </div>
-      {chatAvailable && (
-        <Link
-          to={`/chat/${user.id}`}
-          className="px-4 py-2 rounded text-white bg-blue-500 hover:bg-blue-600"
-        >
-          Chat
+      <div className="flex items-center justify-end gap-4">
+        <Link to={`/users/${user.id}`} className="px-4 py-2 rounded text-white bg-blue-500 hover:bg-blue-600">
+          Profil
         </Link>
-      )}
+        {chatAvailable && (
+          <Link
+            to={`/chat/${user.id}`}
+            className="px-4 py-2 rounded text-white bg-blue-500 hover:bg-blue-600"
+          >
+            Chat
+          </Link>
+        )}
+
+      </div>
     </div>
   );
 };

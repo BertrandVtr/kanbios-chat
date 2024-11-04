@@ -1,9 +1,9 @@
-import { FormInput } from '../components/forms/FormInput.tsx';
+import { FormInput } from '../../components/forms/FormInput.tsx';
 import { ChangeEvent, FormEvent, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { useAppDispatch } from '../store/hooks.ts';
-import { login } from '../store/auth/authSlice.ts';
-import { LogInFormData } from '../types/LogInFormData.ts';
+import { useAppDispatch } from '../../store/hooks.ts';
+import { login } from '../../store/auth/authSlice.ts';
+import { LogInFormData } from '../../types/LogInFormData.ts';
 
 export const LogInPage = () => {
   const dispatch = useAppDispatch();

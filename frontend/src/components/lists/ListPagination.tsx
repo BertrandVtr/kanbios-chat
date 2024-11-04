@@ -15,7 +15,7 @@ export const ListPagination = ({ pagination, nextPage, previousPage }: ListPagin
           <button
             className="px-3 py-1 bg-gray-200 text-gray-600 rounded hover:bg-gray-300 disabled:bg-gray-300 disabled:text-gray-400 disabled:cursor-not-allowed"
             disabled={pagination.currentPage === 1}
-            onClick={() => previousPage()}
+            onClick={previousPage}
           >
             prev page
           </button>
@@ -23,7 +23,7 @@ export const ListPagination = ({ pagination, nextPage, previousPage }: ListPagin
           <button
             className="px-3 py-1 bg-gray-200 text-gray-600 rounded hover:bg-gray-300 disabled:bg-gray-300 disabled:text-gray-400 disabled:cursor-not-allowed"
             disabled={pagination.currentPage === pagination.lastPage}
-            onClick={() => nextPage()}
+            onClick={nextPage}
           >
             next page
           </button>

@@ -1,10 +1,10 @@
-import { UserList } from '../components/users/UserList.tsx';
+import { UserList } from '../../components/users/UserList.tsx';
 import { useSearchParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { Paginated } from '../types/Paginated.ts';
-import { User } from '../types/User.ts';
-import { ListPagination } from '../components/lists/ListPagination.tsx';
-import { getUsers } from '../api/UsersApi.ts';
+import { Paginated } from '../../types/Paginated.ts';
+import { User } from '../../types/User.ts';
+import { ListPagination } from '../../components/lists/ListPagination.tsx';
+import { getUsers } from '../../api/UsersApi.ts';
 import { PlusIcon } from '@heroicons/react/16/solid';
 
 export const UsersListingPage = () => {
@@ -41,8 +41,8 @@ export const UsersListingPage = () => {
 
 
   return (
-    <>
-      <div className="flex items-center justify-between p-4 border-b border-gray-300">
+    <div className="max-w-7xl mx-auto">
+      <div className="flex items-center justify-center gap-8 p-4 border-b border-gray-300">
         <h2 className="text-xl font-semibold">Liste des utilisateurs</h2>
         <button className="text-white bg-blue-500 hover:bg-blue-600 rounded-full w-8 h-8 inline-flex items-center justify-center">
           <PlusIcon className="size-6"></PlusIcon>
@@ -52,6 +52,6 @@ export const UsersListingPage = () => {
         ? (<UserList users={paginatedUsers.data} />)
         : (<p className="italic text-gray-600 text-center">Aucun utilisateur</p>)}
       {paginatedUsers && <ListPagination pagination={paginatedUsers} nextPage={nextPage} previousPage={prevPage} />}
-    </>
+    </div>
   );
 };
