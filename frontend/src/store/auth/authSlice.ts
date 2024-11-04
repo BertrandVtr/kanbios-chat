@@ -40,11 +40,12 @@ const authSlice = createSlice({
   selectors: {
     selectAuthUser: state => state.user,
     selectIsAuthenticated: state => !!state.user,
+    selectToken: state => state.token,
   },
 });
 
 export const { setToken, clearAuth, setAuthUser } = authSlice.actions;
-export const { selectAuthUser, selectIsAuthenticated } = authSlice.selectors;
+export const { selectAuthUser, selectIsAuthenticated, selectToken } = authSlice.selectors;
 
 interface DecodeAndStoreActionPayload {
   token: string;
