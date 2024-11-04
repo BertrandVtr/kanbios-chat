@@ -15,7 +15,7 @@ export class AuthService {
   public async register(RegisterDto: RegisterDto): Promise<User> {
     return await this.userService.create({
       email: RegisterDto.email,
-      password: await this.hasPassword(RegisterDto.password),
+      password: await this.hashPassword(RegisterDto.password),
       firstName: RegisterDto.firstName,
       lastName: RegisterDto.lastName,
     });
@@ -48,7 +48,7 @@ export class AuthService {
     }
   }
 
-  private async hasPassword(password: string): Promise<string> {
+  private async hashPassword(password: string): Promise<string> {
     const salt = await bcrypt.genSalt();
     return bcrypt.hash(password, salt);
   }

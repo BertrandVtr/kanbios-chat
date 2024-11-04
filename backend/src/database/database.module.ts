@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { User } from '../user/user.entity';
 import { ConfigService } from '@nestjs/config';
-import * as process from 'node:process';
+import { User } from '../user/user.entity';
+import { MongooseModule, MongooseModuleFactoryOptions } from '@nestjs/mongoose';
 
 @Module({
   imports: [
@@ -14,10 +14,23 @@ import * as process from 'node:process';
         username: configService.get<string>('DATABASE_USER'),
         password: configService.get<string>('DATABASE_PASSWORD'),
         database: configService.get<string>('DATABASE_DB'),
-        synchronize: process.env.NODE_ENV === 'development',
-        autoLoadEntities: true,
+        synchronize: true,
         entities: [User],
       }),
+      inject: [ConfigService],
+    }),
+    MongooseModule.forRootAsync({
+      useFactory: (
+        configService: ConfigService,
+      ): MongooseModuleFactoryOptions => {
+        const host = configService.get<string>('MONGO_DB_HOST');
+        const port = configService.get<string>('MONGO_DB_PORT');
+        const db = configService.get<string>('MONGO_DB_DATABASE');
+
+        return {
+          uri: `mongodb://${host}:${port}/${db}`,
+        };
+      },
       inject: [ConfigService],
     }),
   ],
