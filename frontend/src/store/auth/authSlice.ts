@@ -95,6 +95,14 @@ export const login = createAsyncThunk<void, LogInFormData>(
   },
 );
 
+export const logout = createAsyncThunk(
+  'auth/logout',
+  async (_arg, { dispatch }) => {
+    localStorage.removeItem('JwtToken');
+    dispatch(clearAuth());
+  },
+);
+
 export const loadTokenFromStorage = createAsyncThunk(
   'auth/loadTokenFromStorage',
   async (_arg, { dispatch }) => {
@@ -118,17 +126,9 @@ export const verifyToken = createAsyncThunk(
 export const bootApplication = createAsyncThunk(
   'auth/boot',
   async (_arg, { dispatch }) => {
-    await dispatch(loadTokenFromStorage())
-    await dispatch(verifyToken())
-    dispatch(booted())
-  },
-);
-
-export const logout = createAsyncThunk(
-  'auth/logout',
-  async (_arg, { dispatch }) => {
-    localStorage.removeItem('JwtToken');
-    dispatch(clearAuth());
+    await dispatch(loadTokenFromStorage());
+    await dispatch(verifyToken());
+    dispatch(booted());
   },
 );
 
