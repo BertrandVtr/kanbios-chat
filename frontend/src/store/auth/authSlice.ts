@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { User } from '../../types/User.ts';
-import { login as loginApi, signIn as singInApi } from '../../api/AuthApi.ts';
+import { login as loginApi, signIn as singInApi, verifyToken as verifyTokenApi } from '../../api/AuthApi.ts';
 import { jwtDecode, JwtPayload } from 'jwt-decode';
 import { LogInFormData } from '../../types/LogInFormData.ts';
 import { SingInFormData } from '../../types/SingInFormData.ts';
@@ -8,11 +8,13 @@ import { SingInFormData } from '../../types/SingInFormData.ts';
 interface AuthState {
   user: User | null;
   token: string | null;
+  booted: boolean;
 }
 
 const initialState: AuthState = {
   user: null,
   token: null,
+  booted: false,
 };
 
 const authSlice = createSlice({
@@ -31,9 +33,17 @@ const authSlice = createSlice({
         user,
       };
     },
-    clearAuth: () => {
+    clearAuth: (state) => {
       return {
-        ...initialState,
+        ...state,
+        token: null,
+        user: null,
+      };
+    },
+    booted: (state) => {
+      return {
+        ...state,
+        booted: true,
       };
     },
   },
@@ -41,28 +51,17 @@ const authSlice = createSlice({
     selectAuthUser: state => state.user,
     selectIsAuthenticated: state => !!state.user,
     selectToken: state => state.token,
+    selectIsBooted: state => state.booted,
   },
 });
 
-export const { setToken, clearAuth, setAuthUser } = authSlice.actions;
-export const { selectAuthUser, selectIsAuthenticated, selectToken } = authSlice.selectors;
+export const { setToken, clearAuth, setAuthUser, booted } = authSlice.actions;
+export const { selectAuthUser, selectIsAuthenticated, selectToken, selectIsBooted } = authSlice.selectors;
 
-interface DecodeAndStoreActionPayload {
-  token: string;
-  onSuccess?: () => void;
-}
-
-export const decodeAndStoreToken = createAsyncThunk<void, DecodeAndStoreActionPayload>(
+export const decodeAndStoreToken = createAsyncThunk<void, string>(
   'auth/decodeAndStoreToken',
-  async ({ onSuccess, token }, { dispatch }) => {
+  async (token, { dispatch }) => {
     const decoded = jwtDecode<User & JwtPayload>(token);
-    const now = Math.floor(Date.now() / 1000);
-
-    if (decoded.exp && now > decoded.exp) {
-      localStorage.removeItem('JwtToken');
-      dispatch(clearAuth());
-      return;
-    }
 
     const { firstName, lastName, email, id } = decoded;
     const user: User = { firstName, lastName, email, id };
@@ -71,41 +70,27 @@ export const decodeAndStoreToken = createAsyncThunk<void, DecodeAndStoreActionPa
     dispatch(setAuthUser(user));
 
     localStorage.setItem('JwtToken', token);
-
-    if (onSuccess) {
-      onSuccess();
-    }
   },
 );
 
-interface SignInActionPayload {
-  formData: SingInFormData;
-  onSuccess?: () => void;
-}
-
-export const signIn = createAsyncThunk<void, SignInActionPayload>(
+export const signIn = createAsyncThunk<void, SingInFormData>(
   'auth/signIn',
-  async ({ onSuccess, formData }, { dispatch }) => {
+  async (formData, { dispatch }) => {
     const token = await singInApi(formData);
 
     if (token) {
-      dispatch(decodeAndStoreToken({ token, onSuccess }));
+      dispatch(decodeAndStoreToken(token));
     }
   },
 );
 
-interface LoginActionPayload {
-  formData: LogInFormData;
-  onSuccess?: () => void;
-}
-
-export const login = createAsyncThunk<void, LoginActionPayload>(
+export const login = createAsyncThunk<void, LogInFormData>(
   'auth/login',
-  async ({ onSuccess, formData }, { dispatch }) => {
+  async (formData: LogInFormData, { dispatch }) => {
     const token = await loginApi(formData.email, formData.password);
 
     if (token) {
-      dispatch(decodeAndStoreToken({ token, onSuccess }));
+      dispatch(decodeAndStoreToken(token));
     }
   },
 );
@@ -116,15 +101,32 @@ export const loadTokenFromStorage = createAsyncThunk(
     const token = localStorage.getItem('JwtToken');
 
     if (token) {
-      dispatch(decodeAndStoreToken({ token }));
+      await dispatch(decodeAndStoreToken(token));
     }
+  },
+);
+
+export const verifyToken = createAsyncThunk(
+  'auth/verifyToken',
+  async (_arg, { dispatch }) => {
+    if (!await verifyTokenApi()) {
+      dispatch(logout());
+    }
+  },
+);
+
+export const bootApplication = createAsyncThunk(
+  'auth/boot',
+  async (_arg, { dispatch }) => {
+    await dispatch(loadTokenFromStorage())
+    await dispatch(verifyToken())
+    dispatch(booted())
   },
 );
 
 export const logout = createAsyncThunk(
   'auth/logout',
   async (_arg, { dispatch }) => {
-    console.log('bon bon bon');
     localStorage.removeItem('JwtToken');
     dispatch(clearAuth());
   },

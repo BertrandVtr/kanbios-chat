@@ -16,6 +16,7 @@ import { MongooseModule, MongooseModuleFactoryOptions } from '@nestjs/mongoose';
         database: configService.get<string>('DATABASE_DB'),
         synchronize: true,
         entities: [User],
+        migrations: [__dirname + '/migrations/*{.ts,.js}'],
       }),
       inject: [ConfigService],
     }),

@@ -1,4 +1,9 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import {
+  CanActivate,
+  ExecutionContext,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { Request } from 'express';
 import { AuthService } from './auth.service';
 
@@ -12,7 +17,7 @@ export class AuthGuard implements CanActivate {
     const currentUser = await this.authService.verifyJWT(token);
 
     if (!currentUser) {
-      return false;
+      throw new UnauthorizedException('Invalid or missing token');
     }
 
     request.user = currentUser;

@@ -20,7 +20,7 @@ export class UserEmailAlreadyExistsValidator
     value: string,
     args: ContextAwareValidationArguments,
   ): Promise<boolean> {
-    const userId = args.object.context.params.id;
+    const userId = args.object?.context?.params?.id;
 
     const user = await this.userService.findOneByEmail(value, {
       id: userId ? Not(+userId) : undefined,

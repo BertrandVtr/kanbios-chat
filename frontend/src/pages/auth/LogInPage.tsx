@@ -1,13 +1,14 @@
 import { FormInput } from '../../components/forms/FormInput.tsx';
-import { ChangeEvent, FormEvent, useState } from 'react';
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { useAppDispatch } from '../../store/hooks.ts';
-import { login } from '../../store/auth/authSlice.ts';
+import { useAppDispatch, useAppSelector } from '../../store/hooks.ts';
+import { login, selectIsAuthenticated } from '../../store/auth/authSlice.ts';
 import { LogInFormData } from '../../types/LogInFormData.ts';
 
 export const LogInPage = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const isAuthenticated = useAppSelector(selectIsAuthenticated);
 
   const [formData, setFormData] = useState<LogInFormData>({
     email: '',
@@ -22,8 +23,14 @@ export const LogInPage = () => {
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    dispatch(login({ formData, onSuccess: () => navigate('/') }));
+    dispatch(login(formData));
   }
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/');
+    }
+  }, [isAuthenticated]);
 
   return (
     <>

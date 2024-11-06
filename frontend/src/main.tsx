@@ -6,9 +6,6 @@ import router from './router.tsx';
 import { RouterProvider } from 'react-router';
 import { Provider } from 'react-redux';
 import store from './store/store.ts';
-import { loadTokenFromStorage } from './store/auth/authSlice.ts';
-
-store.dispatch(loadTokenFromStorage());
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

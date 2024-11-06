@@ -1,0 +1,51 @@
+services:
+    backend:
+        build: ./backend
+        ports:
+            - "${NODE_PORT:-3001}:3001"
+        networks:
+            - app-network
+        depends_on:
+            - mongodb
+            - postgres
+
+    frontend:
+        build: ./frontend
+        ports:
+            - "3000:80"
+        depends_on:
+            - backend
+        networks:
+            - app-network
+
+    postgres:
+        image: postgres:13
+        container_name: postgres_db
+        environment:
+            POSTGRES_USER: ${DATABASE_USER}
+            POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+            POSTGRES_DB: ${DATABASE_DB}
+        ports:
+            - '${POSTGRES_PORT:-5432}:5432'        # Expose le port PostgreSQL pour l'accès local
+        volumes:
+            - postgres_data:/var/lib/postgresql/data  # Persistance des données PostgreSQL
+        networks:
+            - app-network
+
+    mongodb:
+        image: mongo
+        container_name: mongodb
+        ports:
+            - '${MONGO_DB_PORT:-27017}:27017'
+        volumes:
+            - mongo_data:/var/lib/mongodb/data
+        networks:
+            - app-network
+
+networks:
+    app-network:
+        driver: bridge
+
+volumes:
+    postgres_data:
+    mongo_data:

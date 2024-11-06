@@ -1,34 +1,30 @@
 import { createBrowserRouter } from 'react-router-dom';
-import PageLayout from './layouts/PageLayout.tsx';
 import { LogInPage } from './pages/auth/LogInPage.tsx';
 import { SingInPage } from './pages/auth/SingInPage.tsx';
-import { AuthenticatedRoute } from './components/auth/AuthenticatedRoute.tsx';
-import { UsersListingPage } from './pages/users/UsersListingPage.tsx';
-import { FC } from 'react';
+import { AuthenticatedRoutes } from './components/auth/AuthenticatedRoutes.tsx';
 import { ChatPage } from './pages/chat/ChatPage.tsx';
 import { UserNotFound } from './components/users/UserNotFound.tsx';
 import { UserProfilePage } from './pages/users/UserProfilePage.tsx';
-
-const authProtected = (RouteComponent: FC) => {
-  return (
-    <AuthenticatedRoute>
-      <RouteComponent />
-    </AuthenticatedRoute>
-  );
-};
+import { UsersListingPage } from './pages/users/UsersListingPage.tsx';
+import { App } from './App.tsx';
 
 const router = createBrowserRouter([
   {
-    element: <PageLayout />,
+    path: '/',
+    element: <App />,
     children: [
       {
-        path: '*',
-        element: authProtected(UsersListingPage),
+        path: '',
+        element: <AuthenticatedRoutes />,
+        children: [
+          { path: '', element: <UsersListingPage /> },
+          { path: '/chat/:userId', element: <ChatPage />, errorElement: <UserNotFound /> },
+          { path: '/users/:userId', element: <UserProfilePage />, errorElement: <UserNotFound /> },
+        ],
       },
+
       { path: '/logIn', element: <LogInPage /> },
       { path: '/signIn', element: <SingInPage /> },
-      { path: '/chat/:userId', element: authProtected(ChatPage), errorElement: <UserNotFound /> },
-      { path: '/users/:userId', element: authProtected(UserProfilePage), errorElement: <UserNotFound /> },
     ],
   },
 ]);

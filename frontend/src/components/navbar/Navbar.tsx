@@ -2,7 +2,7 @@ import { useAppSelector } from '../../store/hooks.ts';
 import { selectIsAuthenticated } from '../../store/auth/authSlice.ts';
 import { NavbarUserMenu } from './NavbarUserMenu.tsx';
 
-function Navbar() {
+export const Navbar = () => {
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
 
   return (
@@ -15,6 +15,4 @@ function Navbar() {
       </div>
     </nav>
   );
-}
-
-export default Navbar;
+};

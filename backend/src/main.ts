@@ -25,7 +25,7 @@ async function bootstrap() {
     }),
   );
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
-  await app.listen(process.env.PORT ?? 3000);
+  await app.listen(process.env.NODE_PORT ?? 3001);
 }
 
 bootstrap();

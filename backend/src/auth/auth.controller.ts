@@ -11,8 +11,6 @@ import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { AuthService } from './auth.service';
 import { AuthGuard } from './auth.guard';
-import { AuthUser } from './auth-user.decorator';
-import { User } from '../user/user.entity';
 
 @Controller('auth')
 export class AuthController {
@@ -51,12 +49,11 @@ export class AuthController {
     };
   }
 
-  @Get('/test')
+  @Get('/validate-token')
   @UseGuards(AuthGuard)
-  public async test(@AuthUser() user: User) {
+  public async validateToken() {
     return {
       success: true,
-      user,
     };
   }
 }

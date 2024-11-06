@@ -1,8 +1,8 @@
 import { FormInput } from '../../components/forms/FormInput.tsx';
-import { ChangeEvent, FormEvent, useState } from 'react';
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { useAppDispatch } from '../../store/hooks.ts';
-import { signIn } from '../../store/auth/authSlice.ts';
+import { useAppDispatch, useAppSelector } from '../../store/hooks.ts';
+import { selectIsAuthenticated, signIn } from '../../store/auth/authSlice.ts';
 
 interface SingInFormData {
   firstName: string,
@@ -15,6 +15,7 @@ interface SingInFormData {
 export const SingInPage = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const isAuthenticated = useAppSelector(selectIsAuthenticated);
 
   const [formData, setFormData] = useState<SingInFormData>({
     firstName: '',
@@ -34,8 +35,14 @@ export const SingInPage = () => {
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    dispatch(signIn({ formData, onSuccess: () => navigate('/') }));
+    dispatch(signIn(formData));
   }
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/');
+    }
+  }, [isAuthenticated]);
 
   return (
     <>
