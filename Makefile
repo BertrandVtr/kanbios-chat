@@ -14,6 +14,7 @@ default: build up migrate
 up:
 	$(DOCKER_COMPOSE) up -d $(container)
 	@echo "Le projet est maintenant accessible à l'URL : http://localhost:3000"
+	@echo "L'ApiDoc est maintenant accessible à l'URL : http://localhost:3001/api-docs"
 
 # Commande pour construire tous les containers
 # Possibilité de construire des conteneur spécifiques de cette manière:

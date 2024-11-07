@@ -91,7 +91,7 @@ Le projet inclut un `Makefile` pour simplifier les opérations courantes.
 
 2. **Accéder au frontend** : L'application frontend est accessible sur `http://localhost:3000`.
 
-3. **Accéder au backend** : L'API backend est disponible sur `http://localhost:3001`.
+3. **Accéder au backend** : L'API backend est disponible sur `http://localhost:3001`. L'ApiDoc est disponible à l'adresse `http://localhost:3001/api-docs` 
 
 4. **Bases de données** :
     - **PostgreSQL** est accessible sur le port défini dans `POSTGRES_PORT` (par défaut `5432`).
